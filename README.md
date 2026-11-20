@@ -12,7 +12,7 @@ and Model-Independent Browser-Driven Architecture"*.
 
 **How to reproduce.** Install Python 3.10+, Ollama, and Chrome. Run `run.bat`,
 load the extension from `chrome_extension/`, open an exam in the platform,
-and click *Analizar examen*. See `README.md` below for the full workflow.
+and click *Analyze exam*. See `README.md` below for the full workflow.
 
 **Data.** The anonymised CSV of the deployment is in
 `data/examagent-informe.csv`. The survey data is in `survey/responses.csv`.
@@ -23,31 +23,31 @@ and click *Analizar examen*. See `README.md` below for the full workflow.
 
 # ExamAgent NDE 2.1
 
-Flujo: **Analizar examen → Qwen corrige todo → editas lo que quieras → LANZAR NOTA FINAL.**
+Workflow: **Analyze exam → Qwen grades everything → edit whatever you want → LAUNCH FINAL GRADE.**
 
-## Instalación (una vez)
-1. Extrae el ZIP en una carpeta nueva y ejecuta `run.bat` (instala dependencias y abre el panel).
-2. Instala Ollama. **Los modelos se eligen solos** según tu hardware (GPU/VRAM/RAM): un modelo pequeño rápido y otro mayor solo para arbitrar. Si faltan, el panel ofrece descargarlos. Opcional: `tune_ollama.bat` (flash attention, KV cache q8_0). Detalles: `EFFICIENCY.md`.
-3. Chrome → `chrome://extensions` → activa *Modo de desarrollador* → elimina la extensión anterior → *Cargar descomprimida* → carpeta `chrome_extension`.
+## Installation (one time)
+1. Extract the ZIP into a new folder and run `run.bat` (installs dependencies and opens the dashboard).
+2. Install Ollama. **Models are selected automatically** according to your hardware (GPU/VRAM/RAM): a small fast model and a larger one used only for arbitration. If missing, the dashboard offers to download them. Optional: `tune_ollama.bat` (flash attention, KV cache q8_0). Details: `EFFICIENCY.md`.
+3. Chrome → `chrome://extensions` → enable *Developer mode* → remove the previous extension → *Load unpacked* → folder `chrome_extension`.
 
-## Uso
-1. Abre el examen en GES y pulsa la extensión → **Analizar examen**. Se abre el panel.
-2. Qwen evalúa las 80 preguntas **en cascada** (1 token por decisión; el modelo fuerte solo arbitra desacuerdos/dudas), **incluidas las que GES ya calificó**. Verás nota GES, nota IA y nota final.
-3. Edita en el panel la nota o explicación de cualquier pregunta (se guarda al instante). Filtro «Dudosas» para las que el modelo no pudo juzgar con seguridad.
-4. **LANZAR NOTA FINAL**: la extensión recorre GES, pulsa *Editar* en cada pregunta que cambia, escribe puntos (y explicación), pulsa *Aceptar*, comprueba que GES muestra la nota y sigue. Se detiene ante cualquier anomalía.
-   - Recomendado la primera vez: **Simulacro** (abre y cierra el formulario sin escribir) y **Probar con 1 pregunta**.
-   - No cierres ni recargues la pestaña de GES mientras sube. Hay un botón *Detener* en GES y en el panel.
+## Usage
+1. Open the exam in GES and click the extension → **Analyze exam**. The dashboard opens.
+2. Qwen evaluates the 80 questions **in cascade** (1 token per decision; the strong model only arbitrates disagreements/doubts), **including those GES already graded**. You will see the GES grade, the AI grade, and the final grade.
+3. Edit the grade or explanation of any question in the dashboard (saved instantly). Use the "Doubtful" filter for those the model could not judge with confidence.
+4. **LAUNCH FINAL GRADE**: the extension walks through GES, clicks *Edit* on each question that changes, writes points (and explanation), clicks *Accept*, verifies that GES shows the grade, and moves on. It stops on any anomaly.
+   - Recommended the first time: **Simulate** (opens and closes the form without writing) and **Test with 1 question**.
+   - Do not close or reload the GES tab while it is uploading. There is a *Stop* button in GES and in the dashboard.
 
-## Seguridad integrada
-- Solo se suben las notas que difieren de GES (o explicaciones editadas por ti), salvo que marques «Reescribir todas».
-- Se verifica la dirección de la pestaña, el rango de cada nota y el valor mostrado tras guardar; al terminar se relee todo el examen y se comparan las notas.
-- Registro de auditoría: `data/publish_log.jsonl`. Informe CSV desde el panel.
-- Servicio solo en 127.0.0.1; solo el panel y la extensión pueden ordenar escrituras.
+## Built-in safety
+- Only grades that differ from GES (or explanations you edited) are uploaded, unless you check "Rewrite all".
+- The tab URL, the range of each grade, and the value shown after saving are verified; at the end the whole exam is re-read and the grades are compared.
+- Audit log: `data/publish_log.jsonl`. CSV report from the dashboard.
+- Service only on 127.0.0.1; only the dashboard and the extension can issue write commands.
 
-## Límites
-- La calidad depende de los modelos instalados; los pequeños son más flojos en respuestas abiertas (por eso se arbitran y se marcan «dudosas»). Usa la clave/instrucciones opcionales y revisa las «dudosas».
-- El editor de GES se localiza por sus etiquetas («Editar», «Puntos para la respuesta», «Cambiar explicación», «Aceptar»). Si difieren, el simulacro lo detecta antes de escribir nada.
-- Un examen (un estudiante) por captura.
+## Limits
+- Quality depends on the installed models; smaller ones are weaker on open-ended answers (which is why they are arbitrated and marked "doubtful"). Use the optional key/instructions and review the "doubtful" ones.
+- The GES editor is located by its labels ("Edit", "Points for the answer", "Change explanation", "Accept"). If they differ, the simulate mode detects it before writing anything.
+- One exam (one student) per capture.
 
-## Pruebas (desarrollo)
-`python -m pytest tests -q` y `node tests/e2e_dom.test.js` (requiere `npm i jsdom`, backend en :8765 y `python tests/fake_ollama.py`).
+## Tests (development)
+`python -m pytest tests -q` and `node tests/e2e_dom.test.js` (requires `npm i jsdom`, backend on :8765, and `python tests/fake_ollama.py`).
