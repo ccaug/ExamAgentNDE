@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "ExamAgent NDE",
+  "version": "2.0.0",
+  "description": "Analiza el examen abierto en GES, y tras tu clic en LANZAR NOTA FINAL introduce las notas pregunta por pregunta y las verifica.",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["http://127.0.0.1:8765/*"],
+  "background": {"service_worker": "background.js"},
+  "content_scripts": [
+    {"matches": ["http://127.0.0.1:8765/*"], "js": ["bridge.js"], "run_at": "document_idle"}
+  ],
+  "action": {"default_title": "ExamAgent NDE", "default_popup": "popup.html"}
+}

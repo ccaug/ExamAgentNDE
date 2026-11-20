@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the accompanying paper."
+title: "ExamAgent NDE"
+version: "2.1.0"
+date-released: "2026-11-19"
+authors:
+  - family-names: "Gonzalez"
+    given-names: "Oscar"
+    affiliation: "Universidad (por confirmar)"
+abstract: >-
+  A locally hosted, browser-driven system for AI-assisted grading on closed
+  assessment platforms. Uses a cascaded multi-model architecture with a fast
+  tier for closed-ended questions, an arbitration tier for open-ended and
+  disputed items, and a fail-closed publish loop with per-item verification.
+keywords:
+  - computing education
+  - large language models
+  - formative assessment
+  - browser automation
+  - local inference
+license: MIT
+repository-code: "https://github.com/<usuario>/examagent-nde"
